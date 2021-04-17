@@ -23,8 +23,8 @@ public class Movie {
       return new Movie(
         json.getString("title"),
         json.getString("overview"),
-        String.format("TODO/%s", json.getString("backdrop_path")),
-        String.format("TODO/%s", json.getString("poster_path"))
+        MoviesDatabase.backdropUrl(json.getString("backdrop_path")),
+        MoviesDatabase.posterUrl(json.getString("poster_path"))
       );
     } catch (JSONException e) {
       e.printStackTrace();

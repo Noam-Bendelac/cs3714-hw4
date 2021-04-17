@@ -23,6 +23,10 @@ public class MoviesDatabase {
   private static final String MOVIES_URL =
     "https://api.themoviedb.org/3/movie/now_playing?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed";
   
+  
+  private static final String IMAGE_BASE_URL = "https://image.tmdb.org/t/p";
+  
+  
   private static final List<Movie> DEFAULT_MOVIES = Collections.emptyList();
   
   // get movies asynchronously from /movie/now_playing endpoint.
@@ -59,6 +63,14 @@ public class MoviesDatabase {
         callback.accept(DEFAULT_MOVIES);
       }
     });
+  }
+  
+  
+  public static String backdropUrl(String backdropPath) {
+    return String.format("%s/w780%s", IMAGE_BASE_URL, backdropPath);
+  }
+  public static String posterUrl(String posterPath) {
+    return String.format("%s/w342%s", IMAGE_BASE_URL, posterPath);
   }
   
 }
