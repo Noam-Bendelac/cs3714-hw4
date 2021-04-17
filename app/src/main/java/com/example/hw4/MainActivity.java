@@ -9,22 +9,12 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.TextView;
 
-import com.codepath.asynchttpclient.AsyncHttpClient;
-import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import okhttp3.Headers;
 
 public class MainActivity extends AppCompatActivity {
   
@@ -38,8 +28,8 @@ public class MainActivity extends AppCompatActivity {
     vm.getMovies().observe(this, movies -> {
       TextView tv = findViewById(R.id.textView1);
       tv.setText(movies.stream()
-        .map(movie -> String.format("%s %s", movie.title, movie.overview))
-        .collect(Collectors.joining(", "))
+        .map(movie -> String.format("%s\n%s", movie.title, movie.overview))
+        .collect(Collectors.joining(",\n"))
       );
     });
   }
@@ -49,11 +39,10 @@ public class MainActivity extends AppCompatActivity {
   
   
   
-  // ViewModel class to handle MainActivity presentation
+  // ViewModel class to handle MainActivity presentation.
+  // this class outlives MainActivity onDestroy for configuration changes, but will be destroyed
+  //  when MainActivity is actually done
   static public class MainViewModel extends ViewModel {
-    
-    
-    private static final String MOVIES_URL = "https://api.themoviedb.org/3/movie/now_playing?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed";
     
     
     // livedata stores the api response
@@ -75,34 +64,7 @@ public class MainActivity extends AppCompatActivity {
   
     // asynchronously fetch the movies
     private void loadMovies() {
-      AsyncHttpClient client = new AsyncHttpClient();
-      client.get(MOVIES_URL, new JsonHttpResponseHandler() {
-        @Override
-        public void onSuccess(int statusCode, Headers headers, JSON json) {
-          try {
-            JSONArray results = json.jsonObject.getJSONArray("results");
-            List<Movie> movies = new ArrayList<>();
-            for (int i = 0; i < results.length(); i++) {
-              movies.add(Movie.fromJson(results.getJSONObject(i)));
-            }
-            mMovies.setValue(movies);
-          } catch (JSONException e) {
-            e.printStackTrace();
-            mMovies.setValue(Collections.emptyList());
-          }
-        }
-        
-        @Override
-        public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-          // for now just log; data will remain null
-          Log.e("Main/VM/fetch", "fetch failed"
-            + statusCode
-            + response
-            + Arrays.toString(throwable.getStackTrace())
-          );
-          mMovies.setValue(Collections.emptyList());
-        }
-      });
+      MoviesDatabase.getMovies(movieList -> mMovies.setValue(movieList));
     }
     
     
