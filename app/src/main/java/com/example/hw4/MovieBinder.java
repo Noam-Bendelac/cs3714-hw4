@@ -1,6 +1,7 @@
 package com.example.hw4;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.view.View;
 import android.widget.ImageView;
@@ -30,13 +31,16 @@ public class MovieBinder implements ListAdapter.ItemBinder<Movie> {
     TextView textOverview = itemView.findViewById(R.id.textOverview);
     ImageView image = itemView.findViewById(R.id.imageView);
     
+    // simple text fields
     textTitle.setText(movie.title);
     textOverview.setText(movie.overview);
     
-    Glide.with(mCtx).load(movie.posterURL).into(image);
+    // different images for different configurations
+    boolean landscape = mCtx.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+    Glide.with(mCtx).load(landscape ? movie.backdropURL : movie.posterURL).into(image);
     
     
-    // set alternating background colors
+    // set alternating background colors like a table
     int lightColor = 40;
     int darkColor = 10;
     conLayout.setBackgroundColor(
