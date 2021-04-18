@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
     
     ListAdapter<Movie> movieAdapter = new ListAdapter<>(
-      this, Collections.emptyList(), R.layout.item_movie, new MovieBinder()
+      this, Collections.emptyList(), R.layout.item_movie, new MovieBinder(this)
     );
     
     MainViewModel vm = new ViewModelProvider(this).get(MainViewModel.class);

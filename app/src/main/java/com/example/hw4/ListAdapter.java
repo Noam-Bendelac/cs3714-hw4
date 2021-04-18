@@ -18,13 +18,14 @@ import java.util.List;
  */
 public class ListAdapter<I> extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
   
-  /**
-   * functional interface that takes the itemView to bind, and the I item (data) to bind to;
-   * and binds itemView to reflect the I item's data
-   * @param <I> type of data item
-   */
   public interface ItemBinder<I> {
-    void bind(View itemView, I item);
+    /**
+     * apply the data in item to itemView
+     * @param itemView the view to bind to data
+     * @param item the data to apply to itemView
+     * @param position the position in the list
+     */
+    void bind(View itemView, I item, int position);
   }
   
   
@@ -75,7 +76,7 @@ public class ListAdapter<I> extends RecyclerView.Adapter<ListAdapter.ViewHolder>
   public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
     // Log.d("ListAdapter", "bindViewHolder " + position);
     I item = mList.get(position);
-    mBind.bind(holder.mItemView, item);
+    mBind.bind(holder.mItemView, item, position);
   }
   
   
