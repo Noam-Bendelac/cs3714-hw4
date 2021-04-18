@@ -6,14 +6,15 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -24,14 +25,27 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
     
+    // not ideal, just doing this for now
+    List<Movie> temp = new ArrayList<>();
+    ListAdapter<Movie> movieAdapter = new ListAdapter<>(this, temp, R.layout.item_movie, new MovieBinder());
+    
     MainViewModel vm = new ViewModelProvider(this).get(MainViewModel.class);
     vm.getMovies().observe(this, movies -> {
-      TextView tv = findViewById(R.id.textView1);
-      tv.setText(movies.stream()
-        .map(movie -> String.format("%s\n%s", movie.title, movie.overview))
-        .collect(Collectors.joining(",\n"))
-      );
+      temp.clear();
+      temp.addAll(movies);
+      movieAdapter.notifyDataSetChanged();
+      
+      // TextView tv = findViewById(R.id.textView1);
+      // tv.setText(movies.stream()
+      //   .map(movie -> String.format("%s\n%s", movie.title, movie.overview))
+      //   .collect(Collectors.joining(",\n"))
+      // );
     });
+  
+    RecyclerView rvMovies = findViewById(R.id.recycViewMovies);
+    rvMovies.setAdapter(movieAdapter);
+    rvMovies.setLayoutManager(new LinearLayoutManager(this));
+    
   }
   
   

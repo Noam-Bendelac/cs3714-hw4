@@ -32,6 +32,7 @@ dependencies {
 
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1'
+    implementation 'androidx.recyclerview:recyclerview:1.2.0'
 
     implementation 'com.codepath.libraries:asynchttpclient:2.0.0'
 
