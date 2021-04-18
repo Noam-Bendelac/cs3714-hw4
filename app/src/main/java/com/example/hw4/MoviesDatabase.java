@@ -1,5 +1,6 @@
 package com.example.hw4;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 
 import androidx.core.util.Consumer;
@@ -20,20 +21,26 @@ import okhttp3.Headers;
 // repository class that acts as an abstraction of the themoviedb.org database
 public class MoviesDatabase {
   
-  private static final String MOVIES_URL =
-    "https://api.themoviedb.org/3/movie/now_playing?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed";
+  private static final String MOVIES_URL_BASE =
+    // "https://api.themoviedb.org/3/movie/now_playing?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed";
+    "https://api.themoviedb.org/3/movie/now_playing";
+  private static final String API_KEY = "a07e22bc18f5cb106bfe4cc1f83ad8ed";
   
   
   private static final String IMAGE_BASE_URL = "https://image.tmdb.org/t/p";
   
   
-  private static final List<Movie> DEFAULT_MOVIES = Collections.emptyList();
+  public static final List<Movie> DEFAULT_MOVIES = Collections.emptyList();
   
   // get movies asynchronously from /movie/now_playing endpoint.
   // response passed to callback
-  public static void getMovies(Consumer<List<Movie>> callback) {
+  public static void getMovies(int page, Consumer<List<Movie>> callback) {
     AsyncHttpClient client = new AsyncHttpClient();
-    client.get(MOVIES_URL, new JsonHttpResponseHandler() {
+  
+    @SuppressLint("DefaultLocale")
+    String url = String.format("%s?api_key=%s&page=%d", MOVIES_URL_BASE, API_KEY, page);
+    
+    client.get(url, new JsonHttpResponseHandler() {
       @Override
       public void onSuccess(int statusCode, Headers headers, JSON json) {
         try {
